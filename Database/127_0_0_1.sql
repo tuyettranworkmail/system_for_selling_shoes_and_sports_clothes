@@ -161,7 +161,11 @@ CREATE TABLE `orders` (
   `total_amount` decimal(10,2) NOT NULL,
   `coupon_id` int(11) DEFAULT NULL,
   `final_amount` decimal(10,2) NOT NULL,
+  `shipping_name` varchar(100) NOT NULL,
+  `shipping_phone` varchar(20) NOT NULL,
+  `shipping_email` varchar(100) DEFAULT NULL,
   `shipping_address` varchar(255) NOT NULL,
+  `note` text DEFAULT NULL,
   `status` enum('pending','confirmed','shipping','delivered','canceled') DEFAULT 'pending',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
