@@ -6,81 +6,11 @@ $genderLabel = 'Tất cả sản phẩm';
 if ($gender === 'men') $genderLabel = 'Sản phẩm Nam';
 if ($gender === 'women') $genderLabel = 'Sản phẩm Nữ';
 
-// Product data - hardcoded based on available images
-$allProducts = [
-    // === MEN'S PRODUCTS ===
-    ['name' => 'Air Zoom Pegasus 42 Wide', 'image' => 'AIR+ZOOM+PEGASUS+42+WIDE.avif', 'price' => 3800000, 'type' => 'Giày chạy bộ Nam', 'gender' => 'men', 'category' => 'Running'],
-    ['name' => 'Nike SB Dunk Low Pro', 'image' => 'NIKE+SB+DUNK+LOW+PRO.avif', 'price' => 4200000, 'type' => 'Giày Skateboarding Nam', 'gender' => 'men', 'category' => 'Skateboarding'],
-    ['name' => 'Nike Air Max Moto 2K', 'image' => 'NIKE+AIR+MAX+MOTO+2K.avif', 'price' => 3500000, 'type' => 'Giày Lifestyle Nam', 'gender' => 'men', 'category' => 'Lifestyle'],
-    ['name' => 'Vapor 17 Pro FG', 'image' => 'VAPOR+17+PRO+FG.avif', 'price' => 4500000, 'type' => 'Giày đá bóng Nam', 'gender' => 'men', 'category' => 'Football'],
-    ['name' => 'Giannis Freak 7 EP', 'image' => 'GIANNIS+FREAK+7+EP.avif', 'price' => 4800000, 'type' => 'Giày bóng rổ Nam', 'gender' => 'men', 'category' => 'Basketball'],
-    ['name' => 'Nike Court Lite 4', 'image' => 'M+NIKE+COURT+LITE+4.avif', 'price' => 2200000, 'type' => 'Giày tennis Nam', 'gender' => 'men', 'category' => 'Tennis'],
-    ['name' => 'Nike Metcon 10', 'image' => 'M+NIKE+METCON+10.avif', 'price' => 3600000, 'type' => 'Giày Training Nam', 'gender' => 'men', 'category' => 'Training'],
-    ['name' => 'Nike Vapor Lite 3 HC', 'image' => 'M+VAPOR+LITE+3+HC.avif', 'price' => 2800000, 'type' => 'Giày tennis Nam', 'gender' => 'men', 'category' => 'Tennis'],
-    ['name' => 'Nike Air Max Cirro Slide', 'image' => 'NIKE+AIR+MAX+CIRRO+SLIDE.avif', 'price' => 1800000, 'type' => 'Dép Nam', 'gender' => 'men', 'category' => 'Slide'],
-    ['name' => 'Nike P-6000', 'image' => 'NIKE+P-6000.avif', 'price' => 3200000, 'type' => 'Giày Lifestyle Nam', 'gender' => 'men', 'category' => 'Lifestyle'],
-    ['name' => 'Nike ReactX Rejuven8 Slide', 'image' => 'NIKE+REACTX+REJUVEN8+SLIDE.avif', 'price' => 2100000, 'type' => 'Dép Nam', 'gender' => 'men', 'category' => 'Slide'],
-    ['name' => 'Nike SB Chron 2 Canvas', 'image' => 'NIKE+SB+CHRON+2+CNVS.avif', 'price' => 2000000, 'type' => 'Giày Skateboarding Nam', 'gender' => 'men', 'category' => 'Skateboarding'],
-    ['name' => 'Nike SB Zoom Blazer Mid', 'image' => 'NIKE+SB+ZOOM+BLAZER+MID.avif', 'price' => 2900000, 'type' => 'Giày Skateboarding Nam', 'gender' => 'men', 'category' => 'Skateboarding'],
-    ['name' => 'Nike Zoom Vomero 5 SE', 'image' => 'NIKE+ZOOM+VOMERO+5+SE.avif', 'price' => 4100000, 'type' => 'Giày chạy bộ Nam', 'gender' => 'men', 'category' => 'Running'],
-    ['name' => 'Phantom 6 High Acad FG/MG', 'image' => 'PHANTOM+6+HIGH+ACAD+FG_MG.avif', 'price' => 2600000, 'type' => 'Giày đá bóng Nam', 'gender' => 'men', 'category' => 'Football'],
-    ['name' => 'Sabrina 3 EP', 'image' => 'SABRINA+3+EP.avif', 'price' => 3900000, 'type' => 'Giày bóng rổ Nam', 'gender' => 'men', 'category' => 'Basketball'],
-    ['name' => 'Tiempo Maestro Elite FG SE', 'image' => 'TIEMPO+MAESTRO+ELITE+FG+SE.avif', 'price' => 6500000, 'type' => 'Giày đá bóng Nam', 'gender' => 'men', 'category' => 'Football'],
-    ['name' => 'Tiempo Maestro Elite FG T', 'image' => 'TIEMPO+MAESTRO+ELITE+FG+T.avif', 'price' => 6200000, 'type' => 'Giày đá bóng Nam', 'gender' => 'men', 'category' => 'Football'],
-    ['name' => 'Air Jordan 1 Low G SPK', 'image' => 'AIR+JORDAN+1+LOW+G+SPK.avif', 'price' => 4500000, 'type' => 'Giày Golf Nam', 'gender' => 'men', 'category' => 'Golf'],
-    ['name' => 'Air Jordan Mule', 'image' => 'AIR+JORDAN+MULE.avif', 'price' => 3100000, 'type' => 'Giày Lifestyle Nam', 'gender' => 'men', 'category' => 'Lifestyle'],
-    ['name' => 'Victory Pro 4', 'image' => 'VICTORY+PRO+4.avif', 'price' => 3800000, 'type' => 'Giày Golf Nam', 'gender' => 'men', 'category' => 'Golf'],
-    ['name' => 'Victory Tour 4', 'image' => 'VICTORY+TOUR+4.avif', 'price' => 4600000, 'type' => 'Giày Golf Nam', 'gender' => 'men', 'category' => 'Golf'],
-    ['name' => 'Waffle Racer SE', 'image' => 'WAFFLE+RACER+SE.avif', 'price' => 3400000, 'type' => 'Giày Lifestyle Nam', 'gender' => 'men', 'category' => 'Lifestyle'],
+// Controllers provide $products and $categories
 
-    // === WOMEN'S PRODUCTS ===
-    ['name' => 'Nike Air Max Moto 2K', 'image' => 'W+NIKE+AIR+MAX+MOTO+2K.avif', 'price' => 3500000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Nike Cortez', 'image' => 'W+NIKE+CORTEZ.avif', 'price' => 2800000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Nike Metcon 10', 'image' => 'W+NIKE+METCON+10.avif', 'price' => 3600000, 'type' => 'Giày Training Nữ', 'gender' => 'women', 'category' => 'Training'],
-    ['name' => 'Nike P-6000', 'image' => 'W+NIKE+P-6000.avif', 'price' => 3200000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Nike Reax 8 NSW SL', 'image' => 'W+NIKE+REAX+8+NSW+SL.avif', 'price' => 2500000, 'type' => 'Giày Training Nữ', 'gender' => 'women', 'category' => 'Training'],
-    ['name' => 'Air Jordan 1 Low SE APLA', 'image' => 'WMNS+AIR+JORDAN+1+LOW+SE+APLA.avif', 'price' => 3900000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Air Jordan 1 Low SE', 'image' => 'WMNS+AIR+JORDAN+1+LOW+SE.avif', 'price' => 3600000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Jordan Flight Court', 'image' => 'WMNS+JORDAN+FLIGHT+COURT.avif', 'price' => 3300000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Nike Air Rift Neo', 'image' => 'WMNS+NIKE+AIR++RIFT+NEO.avif', 'price' => 3100000, 'type' => 'Giày Lifestyle Nữ', 'gender' => 'women', 'category' => 'Lifestyle'],
-    ['name' => 'Nike Court Legacy NN', 'image' => 'WMNS+NIKE+COURT+LEGACY+NN.avif', 'price' => 2200000, 'type' => 'Giày Tennis Nữ', 'gender' => 'women', 'category' => 'Tennis'],
-    ['name' => 'Nike Motiva 2', 'image' => 'WMNS+NIKE+MOTIVA+2.avif', 'price' => 3400000, 'type' => 'Giày chạy bộ Nữ', 'gender' => 'women', 'category' => 'Running'],
-    ['name' => 'Nike ReactX Rejuven8', 'image' => 'WMNS+NIKE+REACTX+REJUVEN8.avif', 'price' => 2100000, 'type' => 'Dép Nữ', 'gender' => 'women', 'category' => 'Slide'],
-];
-
-// Keep original index as stable product id
-foreach ($allProducts as $i => &$p) { $p['id'] = $i; }
-unset($p);
-
-// Filters from query
 $category = $_GET['category'] ?? 'all';
 $sort = $_GET['sort'] ?? 'default';
 $priceRange = $_GET['price'] ?? 'all'; // all | lt3 | 3to5 | gt5
-
-$products = array_filter($allProducts, function ($p) use ($gender, $category, $priceRange) {
-    if ($gender !== 'all' && $p['gender'] !== $gender) return false;
-    if ($category !== 'all' && $p['category'] !== $category) return false;
-    if ($priceRange === 'lt3' && !($p['price'] < 3000000)) return false;
-    if ($priceRange === '3to5' && !($p['price'] >= 3000000 && $p['price'] <= 5000000)) return false;
-    if ($priceRange === 'gt5' && !($p['price'] > 5000000)) return false;
-    return true;
-});
-
-// Sort
-$products = array_values($products);
-usort($products, function ($a, $b) use ($sort) {
-    return match ($sort) {
-        'price-asc'  => $a['price'] <=> $b['price'],
-        'price-desc' => $b['price'] <=> $a['price'],
-        'name-asc'   => strcmp($a['name'], $b['name']),
-        default      => 0,
-    };
-});
-
-// Unique categories for filter dropdown (within current gender)
-$catSource = array_filter($allProducts, fn($p) => $gender === 'all' || $p['gender'] === $gender);
-$categories = array_values(array_unique(array_map(fn($p) => $p['category'], $catSource)));
-sort($categories);
 
 // Helper: build URL keeping other params
 function shopUrl(array $overrides): string {
@@ -114,7 +44,7 @@ function shopUrl(array $overrides): string {
                 <ul class="filter-cat-list">
                     <li><a href="<?= htmlspecialchars(shopUrl(['category' => 'all'])) ?>" class="<?= $category === 'all' ? 'active' : '' ?>">Tất cả</a></li>
                     <?php foreach ($categories as $c): ?>
-                        <li><a href="<?= htmlspecialchars(shopUrl(['category' => $c])) ?>" class="<?= $category === $c ? 'active' : '' ?>"><?= htmlspecialchars($c) ?></a></li>
+                        <li><a href="<?= htmlspecialchars(shopUrl(['category' => $c['name']])) ?>" class="<?= $category === $c['name'] ? 'active' : '' ?>"><?= htmlspecialchars($c['name']) ?></a></li>
                     <?php endforeach; ?>
                 </ul>
 

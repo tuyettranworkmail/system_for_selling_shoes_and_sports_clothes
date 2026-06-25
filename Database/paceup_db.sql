@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 21, 2026 lúc 08:43 AM
+-- Thời gian đã tạo: Th6 25, 2026 lúc 04:28 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `paceup_db`
 --
-CREATE DATABASE IF NOT EXISTS `paceup_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `paceup_db`;
 
 -- --------------------------------------------------------
 
@@ -63,6 +61,21 @@ CREATE TABLE `categories` (
   `status` tinyint(4) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `slug`, `status`) VALUES
+(100, 'Running', 'running', 1),
+(101, 'Skateboarding', 'skateboarding', 1),
+(102, 'Lifestyle', 'lifestyle', 1),
+(103, 'Football', 'football', 1),
+(104, 'Basketball', 'basketball', 1),
+(105, 'Tennis', 'tennis', 1),
+(106, 'Training', 'training', 1),
+(107, 'Slide', 'slide', 1),
+(108, 'Golf', 'golf', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -74,9 +87,9 @@ CREATE TABLE `coupons` (
   `code` varchar(50) NOT NULL,
   `discount_percent` decimal(5,2) DEFAULT NULL,
   `max_discount` decimal(10,2) DEFAULT NULL,
-  `min_order_amount` decimal(10,2) DEFAULT 0.00,
-  `usage_limit` int(11) DEFAULT NULL,
-  `used_count` int(11) DEFAULT 0,
+  `min_order_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `usage_limit` int(11) NOT NULL DEFAULT 0,
+  `used_count` int(11) NOT NULL DEFAULT 0,
   `start_date` datetime DEFAULT NULL,
   `expiry_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -163,11 +176,10 @@ CREATE TABLE `orders` (
   `final_amount` decimal(10,2) NOT NULL,
   `shipping_name` varchar(100) NOT NULL,
   `shipping_phone` varchar(20) NOT NULL,
-  `shipping_email` varchar(100) DEFAULT NULL,
   `shipping_address` varchar(255) NOT NULL,
-  `note` text DEFAULT NULL,
   `status` enum('pending','confirmed','shipping','delivered','canceled') DEFAULT 'pending',
-  `created_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT current_timestamp(),
+  `shipping_email` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -325,9 +337,52 @@ CREATE TABLE `product` (
   `slug` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `base_price` decimal(10,2) NOT NULL,
-  `sold_count` int(11) DEFAULT 0,
-  `status` tinyint(4) DEFAULT 1
+  `sold_count` int(11) NOT NULL DEFAULT 0,
+  `status` tinyint(4) DEFAULT 1,
+  `type` varchar(100) DEFAULT NULL,
+  `gender` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `product`
+--
+
+INSERT INTO `product` (`id`, `category_id`, `name`, `slug`, `description`, `base_price`, `sold_count`, `status`, `type`, `gender`) VALUES
+(100, 100, 'Air Zoom Pegasus 42 Wide', 'air-zoom-pegasus-42-wide', 'Air Zoom Pegasus 42 Wide chính hãng Nike. Sản phẩm thuộc dòng Running, cam kết chất lượng 100% và bảo hành đầy đủ.', 3800000.00, 0, 1, 'Giày chạy bộ Nam', 'men'),
+(101, 101, 'Nike SB Dunk Low Pro', 'nike-sb-dunk-low-pro', 'Nike SB Dunk Low Pro chính hãng Nike. Sản phẩm thuộc dòng Skateboarding, cam kết chất lượng 100% và bảo hành đầy đủ.', 4200000.00, 0, 1, 'Giày Skateboarding Nam', 'men'),
+(102, 102, 'Nike Air Max Moto 2K', 'nike-air-max-moto-2k', 'Nike Air Max Moto 2K chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3500000.00, 0, 1, 'Giày Lifestyle Nam', 'men'),
+(103, 103, 'Vapor 17 Pro FG', 'vapor-17-pro-fg', 'Vapor 17 Pro FG chính hãng Nike. Sản phẩm thuộc dòng Football, cam kết chất lượng 100% và bảo hành đầy đủ.', 4500000.00, 0, 1, 'Giày đá bóng Nam', 'men'),
+(104, 104, 'Giannis Freak 7 EP', 'giannis-freak-7-ep', 'Giannis Freak 7 EP chính hãng Nike. Sản phẩm thuộc dòng Basketball, cam kết chất lượng 100% và bảo hành đầy đủ.', 4800000.00, 0, 1, 'Giày bóng rổ Nam', 'men'),
+(105, 105, 'Nike Court Lite 4', 'nike-court-lite-4', 'Nike Court Lite 4 chính hãng Nike. Sản phẩm thuộc dòng Tennis, cam kết chất lượng 100% và bảo hành đầy đủ.', 2200000.00, 0, 1, 'Giày tennis Nam', 'men'),
+(106, 106, 'Nike Metcon 10', 'nike-metcon-10', 'Nike Metcon 10 chính hãng Nike. Sản phẩm thuộc dòng Training, cam kết chất lượng 100% và bảo hành đầy đủ.', 3600000.00, 0, 1, 'Giày Training Nam', 'men'),
+(107, 105, 'Nike Vapor Lite 3 HC', 'nike-vapor-lite-3-hc', 'Nike Vapor Lite 3 HC chính hãng Nike. Sản phẩm thuộc dòng Tennis, cam kết chất lượng 100% và bảo hành đầy đủ.', 2800000.00, 0, 1, 'Giày tennis Nam', 'men'),
+(108, 107, 'Nike Air Max Cirro Slide', 'nike-air-max-cirro-slide', 'Nike Air Max Cirro Slide chính hãng Nike. Sản phẩm thuộc dòng Slide, cam kết chất lượng 100% và bảo hành đầy đủ.', 1800000.00, 0, 1, 'Dép Nam', 'men'),
+(109, 102, 'Nike P-6000', 'nike-p-6000', 'Nike P-6000 chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3200000.00, 0, 1, 'Giày Lifestyle Nam', 'men'),
+(110, 107, 'Nike ReactX Rejuven8 Slide', 'nike-reactx-rejuven8-slide', 'Nike ReactX Rejuven8 Slide chính hãng Nike. Sản phẩm thuộc dòng Slide, cam kết chất lượng 100% và bảo hành đầy đủ.', 2100000.00, 0, 1, 'Dép Nam', 'men'),
+(111, 101, 'Nike SB Chron 2 Canvas', 'nike-sb-chron-2-canvas', 'Nike SB Chron 2 Canvas chính hãng Nike. Sản phẩm thuộc dòng Skateboarding, cam kết chất lượng 100% và bảo hành đầy đủ.', 2000000.00, 0, 1, 'Giày Skateboarding Nam', 'men'),
+(112, 101, 'Nike SB Zoom Blazer Mid', 'nike-sb-zoom-blazer-mid', 'Nike SB Zoom Blazer Mid chính hãng Nike. Sản phẩm thuộc dòng Skateboarding, cam kết chất lượng 100% và bảo hành đầy đủ.', 2900000.00, 0, 1, 'Giày Skateboarding Nam', 'men'),
+(113, 100, 'Nike Zoom Vomero 5 SE', 'nike-zoom-vomero-5-se', 'Nike Zoom Vomero 5 SE chính hãng Nike. Sản phẩm thuộc dòng Running, cam kết chất lượng 100% và bảo hành đầy đủ.', 4100000.00, 0, 1, 'Giày chạy bộ Nam', 'men'),
+(114, 103, 'Phantom 6 High Acad FG/MG', 'phantom-6-high-acad-fg-mg', 'Phantom 6 High Acad FG/MG chính hãng Nike. Sản phẩm thuộc dòng Football, cam kết chất lượng 100% và bảo hành đầy đủ.', 2600000.00, 0, 1, 'Giày đá bóng Nam', 'men'),
+(115, 104, 'Sabrina 3 EP', 'sabrina-3-ep', 'Sabrina 3 EP chính hãng Nike. Sản phẩm thuộc dòng Basketball, cam kết chất lượng 100% và bảo hành đầy đủ.', 3900000.00, 0, 1, 'Giày bóng rổ Nam', 'men'),
+(116, 103, 'Tiempo Maestro Elite FG SE', 'tiempo-maestro-elite-fg-se', 'Tiempo Maestro Elite FG SE chính hãng Nike. Sản phẩm thuộc dòng Football, cam kết chất lượng 100% và bảo hành đầy đủ.', 6500000.00, 0, 1, 'Giày đá bóng Nam', 'men'),
+(117, 103, 'Tiempo Maestro Elite FG T', 'tiempo-maestro-elite-fg-t', 'Tiempo Maestro Elite FG T chính hãng Nike. Sản phẩm thuộc dòng Football, cam kết chất lượng 100% và bảo hành đầy đủ.', 6200000.00, 0, 1, 'Giày đá bóng Nam', 'men'),
+(118, 108, 'Air Jordan 1 Low G SPK', 'air-jordan-1-low-g-spk', 'Air Jordan 1 Low G SPK chính hãng Nike. Sản phẩm thuộc dòng Golf, cam kết chất lượng 100% và bảo hành đầy đủ.', 4500000.00, 0, 1, 'Giày Golf Nam', 'men'),
+(119, 102, 'Air Jordan Mule', 'air-jordan-mule', 'Air Jordan Mule chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3100000.00, 0, 1, 'Giày Lifestyle Nam', 'men'),
+(120, 108, 'Victory Pro 4', 'victory-pro-4', 'Victory Pro 4 chính hãng Nike. Sản phẩm thuộc dòng Golf, cam kết chất lượng 100% và bảo hành đầy đủ.', 3800000.00, 0, 1, 'Giày Golf Nam', 'men'),
+(121, 108, 'Victory Tour 4', 'victory-tour-4', 'Victory Tour 4 chính hãng Nike. Sản phẩm thuộc dòng Golf, cam kết chất lượng 100% và bảo hành đầy đủ.', 4600000.00, 0, 1, 'Giày Golf Nam', 'men'),
+(122, 102, 'Waffle Racer SE', 'waffle-racer-se', 'Waffle Racer SE chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3400000.00, 0, 1, 'Giày Lifestyle Nam', 'men'),
+(123, 102, 'Nike Air Max Moto 2K W', 'nike-air-max-moto-2k-w', 'Nike Air Max Moto 2K W chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3500000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(124, 102, 'Nike Cortez', 'nike-cortez', 'Nike Cortez chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 2800000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(125, 106, 'Nike Metcon 10 W', 'nike-metcon-10-w', 'Nike Metcon 10 W chính hãng Nike. Sản phẩm thuộc dòng Training, cam kết chất lượng 100% và bảo hành đầy đủ.', 3600000.00, 0, 1, 'Giày Training Nữ', 'women'),
+(126, 102, 'Nike P-6000 W', 'nike-p-6000-w', 'Nike P-6000 W chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3200000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(127, 106, 'Nike Reax 8 NSW SL', 'nike-reax-8-nsw-sl', 'Nike Reax 8 NSW SL chính hãng Nike. Sản phẩm thuộc dòng Training, cam kết chất lượng 100% và bảo hành đầy đủ.', 2500000.00, 0, 1, 'Giày Training Nữ', 'women'),
+(128, 102, 'Air Jordan 1 Low SE APLA', 'air-jordan-1-low-se-apla', 'Air Jordan 1 Low SE APLA chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3900000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(129, 102, 'Air Jordan 1 Low SE', 'air-jordan-1-low-se', 'Air Jordan 1 Low SE chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3600000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(130, 102, 'Jordan Flight Court', 'jordan-flight-court', 'Jordan Flight Court chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3300000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(131, 102, 'Nike Air Rift Neo', 'nike-air-rift-neo', 'Nike Air Rift Neo chính hãng Nike. Sản phẩm thuộc dòng Lifestyle, cam kết chất lượng 100% và bảo hành đầy đủ.', 3100000.00, 0, 1, 'Giày Lifestyle Nữ', 'women'),
+(132, 105, 'Nike Court Legacy NN', 'nike-court-legacy-nn', 'Nike Court Legacy NN chính hãng Nike. Sản phẩm thuộc dòng Tennis, cam kết chất lượng 100% và bảo hành đầy đủ.', 2200000.00, 0, 1, 'Giày Tennis Nữ', 'women'),
+(133, 100, 'Nike Motiva 2', 'nike-motiva-2', 'Nike Motiva 2 chính hãng Nike. Sản phẩm thuộc dòng Running, cam kết chất lượng 100% và bảo hành đầy đủ.', 3400000.00, 0, 1, 'Giày chạy bộ Nữ', 'women'),
+(134, 107, 'Nike ReactX Rejuven8', 'nike-reactx-rejuven8', 'Nike ReactX Rejuven8 chính hãng Nike. Sản phẩm thuộc dòng Slide, cam kết chất lượng 100% và bảo hành đầy đủ.', 2100000.00, 0, 1, 'Dép Nữ', 'women');
 
 -- --------------------------------------------------------
 
@@ -339,9 +394,49 @@ CREATE TABLE `product_images` (
   `id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
   `image_url` varchar(255) NOT NULL,
-  `is_primary` tinyint(4) DEFAULT 0,
-  `status` tinyint(4) DEFAULT 1
+  `is_primary` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `product_images`
+--
+
+INSERT INTO `product_images` (`id`, `product_id`, `image_url`, `is_primary`) VALUES
+(1, 100, 'AIR+ZOOM+PEGASUS+42+WIDE.avif', 1),
+(2, 101, 'NIKE+SB+DUNK+LOW+PRO.avif', 1),
+(3, 102, 'NIKE+AIR+MAX+MOTO+2K.avif', 1),
+(4, 103, 'VAPOR+17+PRO+FG.avif', 1),
+(5, 104, 'GIANNIS+FREAK+7+EP.avif', 1),
+(6, 105, 'M+NIKE+COURT+LITE+4.avif', 1),
+(7, 106, 'M+NIKE+METCON+10.avif', 1),
+(8, 107, 'M+VAPOR+LITE+3+HC.avif', 1),
+(9, 108, 'NIKE+AIR+MAX+CIRRO+SLIDE.avif', 1),
+(10, 109, 'NIKE+P-6000.avif', 1),
+(11, 110, 'NIKE+REACTX+REJUVEN8+SLIDE.avif', 1),
+(12, 111, 'NIKE+SB+CHRON+2+CNVS.avif', 1),
+(13, 112, 'NIKE+SB+ZOOM+BLAZER+MID.avif', 1),
+(14, 113, 'NIKE+ZOOM+VOMERO+5+SE.avif', 1),
+(15, 114, 'PHANTOM+6+HIGH+ACAD+FG_MG.avif', 1),
+(16, 115, 'SABRINA+3+EP.avif', 1),
+(17, 116, 'TIEMPO+MAESTRO+ELITE+FG+SE.avif', 1),
+(18, 117, 'TIEMPO+MAESTRO+ELITE+FG+T.avif', 1),
+(19, 118, 'AIR+JORDAN+1+LOW+G+SPK.avif', 1),
+(20, 119, 'AIR+JORDAN+MULE.avif', 1),
+(21, 120, 'VICTORY+PRO+4.avif', 1),
+(22, 121, 'VICTORY+TOUR+4.avif', 1),
+(23, 122, 'WAFFLE+RACER+SE.avif', 1),
+(24, 123, 'W+NIKE+AIR+MAX+MOTO+2K.avif', 1),
+(25, 124, 'W+NIKE+CORTEZ.avif', 1),
+(26, 125, 'W+NIKE+METCON+10.avif', 1),
+(27, 126, 'W+NIKE+P-6000.avif', 1),
+(28, 127, 'W+NIKE+REAX+8+NSW+SL.avif', 1),
+(29, 128, 'WMNS+AIR+JORDAN+1+LOW+SE+APLA.avif', 1),
+(30, 129, 'WMNS+AIR+JORDAN+1+LOW+SE.avif', 1),
+(31, 130, 'WMNS+JORDAN+FLIGHT+COURT.avif', 1),
+(32, 131, 'WMNS+NIKE+AIR++RIFT+NEO.avif', 1),
+(33, 132, 'WMNS+NIKE+COURT+LEGACY+NN.avif', 1),
+(34, 133, 'WMNS+NIKE+MOTIVA+2.avif', 1),
+(35, 134, 'WMNS+NIKE+REACTX+REJUVEN8.avif', 1);
 
 -- --------------------------------------------------------
 
@@ -370,8 +465,7 @@ CREATE TABLE `product_variants` (
   `size` varchar(50) NOT NULL,
   `color` varchar(50) NOT NULL,
   `stock_quantity` int(11) DEFAULT 0,
-  `price_modifier` decimal(10,2) DEFAULT 0.00,
-  `status` tinyint(4) DEFAULT 1
+  `price_modifier` decimal(10,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -414,10 +508,18 @@ CREATE TABLE `user` (
   `phone` varchar(20) DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('admin','user') DEFAULT 'user' COMMENT 'admin hoặc user',
+  `role` enum('admin','user','guest') DEFAULT 'user' COMMENT 'admin hoặc user',
   `status` tinyint(4) DEFAULT 1 COMMENT '1: Hoạt động, 0: Khóa',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `user`
+--
+
+INSERT INTO `user` (`id`, `full_name`, `email`, `phone`, `avatar`, `password`, `role`, `status`, `created_at`) VALUES
+(1, 'Admin', 'admin@123', NULL, NULL, '$2y$10$GJBLTR.QSclTb61ag6YPr.ZYy.YrkTmLzo9/KV8uwcWpoMAf4B1iK', 'admin', 1, '2026-06-25 07:35:38'),
+(2, 'User', 'user@123', NULL, NULL, '$2y$10$r4tvh/xcBu6cKLMAhsXMRuqjyUjwclkeGNRbaG/7LAnPBA2waxIRW', 'user', 1, '2026-06-25 07:35:38');
 
 -- --------------------------------------------------------
 
@@ -430,8 +532,7 @@ CREATE TABLE `user_addresses` (
   `user_id` int(11) DEFAULT NULL,
   `address_line` varchar(255) NOT NULL,
   `ward_district_city` varchar(255) NOT NULL,
-  `is_default` tinyint(4) DEFAULT 0,
-  `status` tinyint(4) DEFAULT 1
+  `is_default` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -643,7 +744,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT cho bảng `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT cho bảng `coupons`
@@ -721,13 +822,13 @@ ALTER TABLE `post_categories`
 -- AUTO_INCREMENT cho bảng `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT cho bảng `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT cho bảng `product_sales_reports`
@@ -757,7 +858,7 @@ ALTER TABLE `setting`
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `user_addresses`
@@ -871,469 +972,6 @@ ALTER TABLE `user_addresses`
 ALTER TABLE `wishlist`
   ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE;
---
--- Cơ sở dữ liệu: `phpmyadmin`
---
-CREATE DATABASE IF NOT EXISTS `phpmyadmin` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-USE `phpmyadmin`;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__bookmark`
---
-
-CREATE TABLE `pma__bookmark` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `dbase` varchar(255) NOT NULL DEFAULT '',
-  `user` varchar(255) NOT NULL DEFAULT '',
-  `label` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `query` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Bookmarks';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__central_columns`
---
-
-CREATE TABLE `pma__central_columns` (
-  `db_name` varchar(64) NOT NULL,
-  `col_name` varchar(64) NOT NULL,
-  `col_type` varchar(64) NOT NULL,
-  `col_length` text DEFAULT NULL,
-  `col_collation` varchar(64) NOT NULL,
-  `col_isNull` tinyint(1) NOT NULL,
-  `col_extra` varchar(255) DEFAULT '',
-  `col_default` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Central list of columns';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__column_info`
---
-
-CREATE TABLE `pma__column_info` (
-  `id` int(5) UNSIGNED NOT NULL,
-  `db_name` varchar(64) NOT NULL DEFAULT '',
-  `table_name` varchar(64) NOT NULL DEFAULT '',
-  `column_name` varchar(64) NOT NULL DEFAULT '',
-  `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `mimetype` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `transformation` varchar(255) NOT NULL DEFAULT '',
-  `transformation_options` varchar(255) NOT NULL DEFAULT '',
-  `input_transformation` varchar(255) NOT NULL DEFAULT '',
-  `input_transformation_options` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Column information for phpMyAdmin';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__designer_settings`
---
-
-CREATE TABLE `pma__designer_settings` (
-  `username` varchar(64) NOT NULL,
-  `settings_data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Settings related to Designer';
-
---
--- Đang đổ dữ liệu cho bảng `pma__designer_settings`
---
-
-INSERT INTO `pma__designer_settings` (`username`, `settings_data`) VALUES
-('root', '{\"angular_direct\":\"direct\",\"snap_to_grid\":\"off\",\"relation_lines\":\"true\"}');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__export_templates`
---
-
-CREATE TABLE `pma__export_templates` (
-  `id` int(5) UNSIGNED NOT NULL,
-  `username` varchar(64) NOT NULL,
-  `export_type` varchar(10) NOT NULL,
-  `template_name` varchar(64) NOT NULL,
-  `template_data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Saved export templates';
-
---
--- Đang đổ dữ liệu cho bảng `pma__export_templates`
---
-
-INSERT INTO `pma__export_templates` (`id`, `username`, `export_type`, `template_name`, `template_data`) VALUES
-(1, 'root', 'server', 'PaceUp', '{\"quick_or_custom\":\"quick\",\"what\":\"sql\",\"db_select[]\":[\"paceup_db\",\"phpmyadmin\",\"test\"],\"aliases_new\":\"\",\"output_format\":\"sendit\",\"filename_template\":\"@SERVER@\",\"remember_template\":\"on\",\"charset\":\"utf-8\",\"compression\":\"none\",\"maxsize\":\"\",\"codegen_structure_or_data\":\"data\",\"codegen_format\":\"0\",\"csv_separator\":\",\",\"csv_enclosed\":\"\\\"\",\"csv_escaped\":\"\\\"\",\"csv_terminated\":\"AUTO\",\"csv_null\":\"NULL\",\"csv_columns\":\"something\",\"csv_structure_or_data\":\"data\",\"excel_null\":\"NULL\",\"excel_columns\":\"something\",\"excel_edition\":\"win\",\"excel_structure_or_data\":\"data\",\"json_structure_or_data\":\"data\",\"json_unicode\":\"something\",\"latex_caption\":\"something\",\"latex_structure_or_data\":\"structure_and_data\",\"latex_structure_caption\":\"Cấu trúc của bảng @TABLE@\",\"latex_structure_continued_caption\":\"Cấu trúc của bảng @TABLE@ (còn nữa)\",\"latex_structure_label\":\"tab:@TABLE@-structure\",\"latex_relation\":\"something\",\"latex_comments\":\"something\",\"latex_mime\":\"something\",\"latex_columns\":\"something\",\"latex_data_caption\":\"Nội dung của bảng @TABLE@\",\"latex_data_continued_caption\":\"Nội dung của bảng @TABLE@ (còn nữa)\",\"latex_data_label\":\"tab:@TABLE@-data\",\"latex_null\":\"\\\\textit{NULL}\",\"mediawiki_structure_or_data\":\"data\",\"mediawiki_caption\":\"something\",\"mediawiki_headers\":\"something\",\"htmlword_structure_or_data\":\"structure_and_data\",\"htmlword_null\":\"NULL\",\"ods_null\":\"NULL\",\"ods_structure_or_data\":\"data\",\"odt_structure_or_data\":\"structure_and_data\",\"odt_relation\":\"something\",\"odt_comments\":\"something\",\"odt_mime\":\"something\",\"odt_columns\":\"something\",\"odt_null\":\"NULL\",\"pdf_report_title\":\"\",\"pdf_structure_or_data\":\"data\",\"phparray_structure_or_data\":\"data\",\"sql_include_comments\":\"something\",\"sql_header_comment\":\"\",\"sql_use_transaction\":\"something\",\"sql_compatibility\":\"NONE\",\"sql_structure_or_data\":\"structure_and_data\",\"sql_create_table\":\"something\",\"sql_auto_increment\":\"something\",\"sql_create_view\":\"something\",\"sql_create_trigger\":\"something\",\"sql_backquotes\":\"something\",\"sql_type\":\"INSERT\",\"sql_insert_syntax\":\"both\",\"sql_max_query_size\":\"50000\",\"sql_hex_for_binary\":\"something\",\"sql_utc_time\":\"something\",\"texytext_structure_or_data\":\"structure_and_data\",\"texytext_null\":\"NULL\",\"yaml_structure_or_data\":\"data\",\"\":null,\"as_separate_files\":null,\"csv_removeCRLF\":null,\"excel_removeCRLF\":null,\"json_pretty_print\":null,\"htmlword_columns\":null,\"ods_columns\":null,\"sql_dates\":null,\"sql_relation\":null,\"sql_mime\":null,\"sql_disable_fk\":null,\"sql_views_as_tables\":null,\"sql_metadata\":null,\"sql_drop_database\":null,\"sql_drop_table\":null,\"sql_if_not_exists\":null,\"sql_simple_view_export\":null,\"sql_view_current_user\":null,\"sql_or_replace_view\":null,\"sql_procedure_function\":null,\"sql_truncate\":null,\"sql_delayed\":null,\"sql_ignore\":null,\"texytext_columns\":null}');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__favorite`
---
-
-CREATE TABLE `pma__favorite` (
-  `username` varchar(64) NOT NULL,
-  `tables` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Favorite tables';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__history`
---
-
-CREATE TABLE `pma__history` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `username` varchar(64) NOT NULL DEFAULT '',
-  `db` varchar(64) NOT NULL DEFAULT '',
-  `table` varchar(64) NOT NULL DEFAULT '',
-  `timevalue` timestamp NOT NULL DEFAULT current_timestamp(),
-  `sqlquery` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='SQL history for phpMyAdmin';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__navigationhiding`
---
-
-CREATE TABLE `pma__navigationhiding` (
-  `username` varchar(64) NOT NULL,
-  `item_name` varchar(64) NOT NULL,
-  `item_type` varchar(64) NOT NULL,
-  `db_name` varchar(64) NOT NULL,
-  `table_name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Hidden items of navigation tree';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__pdf_pages`
---
-
-CREATE TABLE `pma__pdf_pages` (
-  `db_name` varchar(64) NOT NULL DEFAULT '',
-  `page_nr` int(10) UNSIGNED NOT NULL,
-  `page_descr` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='PDF relation pages for phpMyAdmin';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__recent`
---
-
-CREATE TABLE `pma__recent` (
-  `username` varchar(64) NOT NULL,
-  `tables` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Recently accessed tables';
-
---
--- Đang đổ dữ liệu cho bảng `pma__recent`
---
-
-INSERT INTO `pma__recent` (`username`, `tables`) VALUES
-('root', '[{\"db\":\"paceup\",\"table\":\"users\"}]');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__relation`
---
-
-CREATE TABLE `pma__relation` (
-  `master_db` varchar(64) NOT NULL DEFAULT '',
-  `master_table` varchar(64) NOT NULL DEFAULT '',
-  `master_field` varchar(64) NOT NULL DEFAULT '',
-  `foreign_db` varchar(64) NOT NULL DEFAULT '',
-  `foreign_table` varchar(64) NOT NULL DEFAULT '',
-  `foreign_field` varchar(64) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Relation table';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__savedsearches`
---
-
-CREATE TABLE `pma__savedsearches` (
-  `id` int(5) UNSIGNED NOT NULL,
-  `username` varchar(64) NOT NULL DEFAULT '',
-  `db_name` varchar(64) NOT NULL DEFAULT '',
-  `search_name` varchar(64) NOT NULL DEFAULT '',
-  `search_data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Saved searches';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__table_coords`
---
-
-CREATE TABLE `pma__table_coords` (
-  `db_name` varchar(64) NOT NULL DEFAULT '',
-  `table_name` varchar(64) NOT NULL DEFAULT '',
-  `pdf_page_number` int(11) NOT NULL DEFAULT 0,
-  `x` float UNSIGNED NOT NULL DEFAULT 0,
-  `y` float UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Table coordinates for phpMyAdmin PDF output';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__table_info`
---
-
-CREATE TABLE `pma__table_info` (
-  `db_name` varchar(64) NOT NULL DEFAULT '',
-  `table_name` varchar(64) NOT NULL DEFAULT '',
-  `display_field` varchar(64) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Table information for phpMyAdmin';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__table_uiprefs`
---
-
-CREATE TABLE `pma__table_uiprefs` (
-  `username` varchar(64) NOT NULL,
-  `db_name` varchar(64) NOT NULL,
-  `table_name` varchar(64) NOT NULL,
-  `prefs` text NOT NULL,
-  `last_update` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Tables'' UI preferences';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__tracking`
---
-
-CREATE TABLE `pma__tracking` (
-  `db_name` varchar(64) NOT NULL,
-  `table_name` varchar(64) NOT NULL,
-  `version` int(10) UNSIGNED NOT NULL,
-  `date_created` datetime NOT NULL,
-  `date_updated` datetime NOT NULL,
-  `schema_snapshot` text NOT NULL,
-  `schema_sql` text DEFAULT NULL,
-  `data_sql` longtext DEFAULT NULL,
-  `tracking` set('UPDATE','REPLACE','INSERT','DELETE','TRUNCATE','CREATE DATABASE','ALTER DATABASE','DROP DATABASE','CREATE TABLE','ALTER TABLE','RENAME TABLE','DROP TABLE','CREATE INDEX','DROP INDEX','CREATE VIEW','ALTER VIEW','DROP VIEW') DEFAULT NULL,
-  `tracking_active` int(1) UNSIGNED NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Database changes tracking for phpMyAdmin';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__userconfig`
---
-
-CREATE TABLE `pma__userconfig` (
-  `username` varchar(64) NOT NULL,
-  `timevalue` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `config_data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='User preferences storage for phpMyAdmin';
-
---
--- Đang đổ dữ liệu cho bảng `pma__userconfig`
---
-
-INSERT INTO `pma__userconfig` (`username`, `timevalue`, `config_data`) VALUES
-('root', '2026-06-21 06:37:09', '{\"Console\\/Mode\":\"collapse\",\"lang\":\"vi\"}');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__usergroups`
---
-
-CREATE TABLE `pma__usergroups` (
-  `usergroup` varchar(64) NOT NULL,
-  `tab` varchar(64) NOT NULL,
-  `allowed` enum('Y','N') NOT NULL DEFAULT 'N'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='User groups with configured menu items';
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `pma__users`
---
-
-CREATE TABLE `pma__users` (
-  `username` varchar(64) NOT NULL,
-  `usergroup` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Users and their assignments to user groups';
-
---
--- Chỉ mục cho các bảng đã đổ
---
-
---
--- Chỉ mục cho bảng `pma__bookmark`
---
-ALTER TABLE `pma__bookmark`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `pma__central_columns`
---
-ALTER TABLE `pma__central_columns`
-  ADD PRIMARY KEY (`db_name`,`col_name`);
-
---
--- Chỉ mục cho bảng `pma__column_info`
---
-ALTER TABLE `pma__column_info`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `db_name` (`db_name`,`table_name`,`column_name`);
-
---
--- Chỉ mục cho bảng `pma__designer_settings`
---
-ALTER TABLE `pma__designer_settings`
-  ADD PRIMARY KEY (`username`);
-
---
--- Chỉ mục cho bảng `pma__export_templates`
---
-ALTER TABLE `pma__export_templates`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `u_user_type_template` (`username`,`export_type`,`template_name`);
-
---
--- Chỉ mục cho bảng `pma__favorite`
---
-ALTER TABLE `pma__favorite`
-  ADD PRIMARY KEY (`username`);
-
---
--- Chỉ mục cho bảng `pma__history`
---
-ALTER TABLE `pma__history`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `username` (`username`,`db`,`table`,`timevalue`);
-
---
--- Chỉ mục cho bảng `pma__navigationhiding`
---
-ALTER TABLE `pma__navigationhiding`
-  ADD PRIMARY KEY (`username`,`item_name`,`item_type`,`db_name`,`table_name`);
-
---
--- Chỉ mục cho bảng `pma__pdf_pages`
---
-ALTER TABLE `pma__pdf_pages`
-  ADD PRIMARY KEY (`page_nr`),
-  ADD KEY `db_name` (`db_name`);
-
---
--- Chỉ mục cho bảng `pma__recent`
---
-ALTER TABLE `pma__recent`
-  ADD PRIMARY KEY (`username`);
-
---
--- Chỉ mục cho bảng `pma__relation`
---
-ALTER TABLE `pma__relation`
-  ADD PRIMARY KEY (`master_db`,`master_table`,`master_field`),
-  ADD KEY `foreign_field` (`foreign_db`,`foreign_table`);
-
---
--- Chỉ mục cho bảng `pma__savedsearches`
---
-ALTER TABLE `pma__savedsearches`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `u_savedsearches_username_dbname` (`username`,`db_name`,`search_name`);
-
---
--- Chỉ mục cho bảng `pma__table_coords`
---
-ALTER TABLE `pma__table_coords`
-  ADD PRIMARY KEY (`db_name`,`table_name`,`pdf_page_number`);
-
---
--- Chỉ mục cho bảng `pma__table_info`
---
-ALTER TABLE `pma__table_info`
-  ADD PRIMARY KEY (`db_name`,`table_name`);
-
---
--- Chỉ mục cho bảng `pma__table_uiprefs`
---
-ALTER TABLE `pma__table_uiprefs`
-  ADD PRIMARY KEY (`username`,`db_name`,`table_name`);
-
---
--- Chỉ mục cho bảng `pma__tracking`
---
-ALTER TABLE `pma__tracking`
-  ADD PRIMARY KEY (`db_name`,`table_name`,`version`);
-
---
--- Chỉ mục cho bảng `pma__userconfig`
---
-ALTER TABLE `pma__userconfig`
-  ADD PRIMARY KEY (`username`);
-
---
--- Chỉ mục cho bảng `pma__usergroups`
---
-ALTER TABLE `pma__usergroups`
-  ADD PRIMARY KEY (`usergroup`,`tab`,`allowed`);
-
---
--- Chỉ mục cho bảng `pma__users`
---
-ALTER TABLE `pma__users`
-  ADD PRIMARY KEY (`username`,`usergroup`);
-
---
--- AUTO_INCREMENT cho các bảng đã đổ
---
-
---
--- AUTO_INCREMENT cho bảng `pma__bookmark`
---
-ALTER TABLE `pma__bookmark`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `pma__column_info`
---
-ALTER TABLE `pma__column_info`
-  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `pma__export_templates`
---
-ALTER TABLE `pma__export_templates`
-  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT cho bảng `pma__history`
---
-ALTER TABLE `pma__history`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `pma__pdf_pages`
---
-ALTER TABLE `pma__pdf_pages`
-  MODIFY `page_nr` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `pma__savedsearches`
---
-ALTER TABLE `pma__savedsearches`
-  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- Cơ sở dữ liệu: `test`
---
-CREATE DATABASE IF NOT EXISTS `test` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `test`;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

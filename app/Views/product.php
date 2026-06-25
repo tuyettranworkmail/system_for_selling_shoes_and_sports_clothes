@@ -1,28 +1,6 @@
 <?php include __DIR__ . '/partials/header.php'; ?>
 
-<?php
-$products = include __DIR__ . '/../../config/products_data.php';
-foreach ($products as $i => &$p) { $p['id'] = $i; }
-unset($p);
-
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-if (!isset($products[$id])) {
-    http_response_code(404);
-    echo '<div style="max-width:600px;margin:5rem auto;text-align:center;font-family:sans-serif;"><h1>Không tìm thấy sản phẩm</h1><p><a href="<?= BASE_URL ?>shop">Quay lại cửa hàng</a></p></div>';
-    include __DIR__ . '/partials/footer.php';
-    exit;
-}
-
-$product = $products[$id];
-
-// Related: same category, then same gender, exclude self. Up to 4.
-$related = array_filter($products, fn($p) => $p['id'] !== $id && $p['category'] === $product['category']);
-if (count($related) < 4) {
-    $more = array_filter($products, fn($p) => $p['id'] !== $id && $p['gender'] === $product['gender'] && $p['category'] !== $product['category']);
-    $related = array_merge($related, $more);
-}
-$related = array_slice(array_values($related), 0, 4);
-?>
+// Controller provides $product and $related
 
 <style>
 .product-detail-page { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; font-family: var(--font-body); }
@@ -89,7 +67,7 @@ $related = array_slice(array_values($related), 0, 4);
             </div>
 
             <div class="pd-desc">
-                <?= htmlspecialchars($product['name']) ?> chính hãng Nike. Sản phẩm thuộc dòng <?= htmlspecialchars($product['category']) ?>, cam kết chất lượng 100% và bảo hành đầy đủ.
+                <?= nl2br(htmlspecialchars($product['description'] ?? $product['name'] . ' chính hãng Nike. Sản phẩm thuộc dòng ' . $product['category'] . ', cam kết chất lượng 100% và bảo hành đầy đủ.')) ?>
             </div>
 
             <ul class="pd-details">

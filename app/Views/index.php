@@ -33,72 +33,19 @@
     <section class="products-section">
         <h2>Sản phẩm mới</h2>
         <div class="product-grid">
+            <?php foreach ($featuredProducts as $product): ?>
             <div class="product-card">
-                <a href="<?= BASE_URL ?>product?id=0" class="product-img-wrapper" style="display: block;">
-                    <img src="<?= BASE_URL ?>assets/images/AIR+ZOOM+PEGASUS+42+WIDE.avif" alt="Nike Air Zoom Pegasus" class="product-img">
+                <a href="<?= BASE_URL ?>product?id=<?= $product['id'] ?>" class="product-img-wrapper" style="display: block;">
+                    <img src="<?= BASE_URL ?>assets/images/<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-img">
                 </a>
                 <div class="product-info">
-                    <a href="<?= BASE_URL ?>product?id=0" style="text-decoration: none; color: inherit;"><span class="product-title">Nike Air Zoom Pegasus 42</span></a>
-                    <span class="product-category">Running</span>
-                    <span class="product-price">3.800.000 ₫</span>
-                    <button class="btn-buy" onclick="addToCart('Nike Air Zoom Pegasus 42', 3800000, 'assets/images/AIR+ZOOM+PEGASUS+42+WIDE.avif')">Mua ngay</button>
+                    <a href="<?= BASE_URL ?>product?id=<?= $product['id'] ?>" style="text-decoration: none; color: inherit;"><span class="product-title"><?= htmlspecialchars($product['name']) ?></span></a>
+                    <span class="product-category"><?= htmlspecialchars($product['category']) ?></span>
+                    <span class="product-price"><?= number_format($product['price'], 0, ',', '.') ?> ₫</span>
+                    <button class="btn-buy" onclick="addToCart('<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, 'assets/images/<?= htmlspecialchars($product['image']) ?>')">Mua ngay</button>
                 </div>
             </div>
-            <div class="product-card">
-                <a href="<?= BASE_URL ?>product?id=1" class="product-img-wrapper" style="display: block;">
-                    <img src="<?= BASE_URL ?>assets/images/NIKE+SB+DUNK+LOW+PRO.avif" alt="Nike SB Dunk Low Pro" class="product-img">
-                </a>
-                <div class="product-info">
-                    <a href="<?= BASE_URL ?>product?id=1" style="text-decoration: none; color: inherit;"><span class="product-title">Nike SB Dunk Low Pro</span></a>
-                    <span class="product-category">Skateboarding</span>
-                    <span class="product-price">4.200.000 ₫</span>
-                    <button class="btn-buy" onclick="addToCart('Nike SB Dunk Low Pro', 4200000, 'assets/images/NIKE+SB+DUNK+LOW+PRO.avif')">Mua ngay</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <a href="<?= BASE_URL ?>product?id=2" class="product-img-wrapper" style="display: block;">
-                    <img src="<?= BASE_URL ?>assets/images/NIKE+AIR+MAX+MOTO+2K.avif" alt="Nike Air Max Moto 2K" class="product-img">
-                </a>
-                <div class="product-info">
-                    <a href="<?= BASE_URL ?>product?id=2" style="text-decoration: none; color: inherit;"><span class="product-title">Nike Air Max Moto 2K</span></a>
-                    <span class="product-category">Lifestyle</span>
-                    <span class="product-price">3.500.000 ₫</span>
-                    <button class="btn-buy" onclick="addToCart('Nike Air Max Moto 2K', 3500000, 'assets/images/NIKE+AIR+MAX+MOTO+2K.avif')">Mua ngay</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <a href="<?= BASE_URL ?>product?id=3" class="product-img-wrapper" style="display: block;">
-                    <img src="<?= BASE_URL ?>assets/images/VAPOR+17+PRO+FG.avif" alt="Nike Vapor 17 Pro FG" class="product-img">
-                </a>
-                <div class="product-info">
-                    <a href="<?= BASE_URL ?>product?id=3" style="text-decoration: none; color: inherit;"><span class="product-title">Nike Vapor 17 Pro FG</span></a>
-                    <span class="product-category">Football</span>
-                    <span class="product-price">4.500.000 ₫</span>
-                    <button class="btn-buy" onclick="addToCart('Nike Vapor 17 Pro FG', 4500000, 'assets/images/VAPOR+17+PRO+FG.avif')">Mua ngay</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <a href="<?= BASE_URL ?>product?id=18" class="product-img-wrapper" style="display: block;">
-                    <img src="<?= BASE_URL ?>assets/images/AIR+JORDAN+1+LOW+G+SPK.avif" alt="Air Jordan 1 Low G SPK" class="product-img">
-                </a>
-                <div class="product-info">
-                    <a href="<?= BASE_URL ?>product?id=18" style="text-decoration: none; color: inherit;"><span class="product-title">Air Jordan 1 Low G SPK</span></a>
-                    <span class="product-category">Golf</span>
-                    <span class="product-price">3.950.000 ₫</span>
-                    <button class="btn-buy" onclick="addToCart('Air Jordan 1 Low G SPK', 3950000, 'assets/images/AIR+JORDAN+1+LOW+G+SPK.avif')">Mua ngay</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <a href="<?= BASE_URL ?>product?id=5" class="product-img-wrapper" style="display: block;">
-                    <img src="<?= BASE_URL ?>assets/images/M+NIKE+COURT+LITE+4.avif" alt="Nike Court Lite 4" class="product-img">
-                </a>
-                <div class="product-info">
-                    <a href="<?= BASE_URL ?>product?id=5" style="text-decoration: none; color: inherit;"><span class="product-title">Nike Court Lite 4</span></a>
-                    <span class="product-category">Tennis</span>
-                    <span class="product-price">2.400.000 ₫</span>
-                    <button class="btn-buy" onclick="addToCart('Nike Court Lite 4', 2400000, 'assets/images/M+NIKE+COURT+LITE+4.avif')">Mua ngay</button>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
