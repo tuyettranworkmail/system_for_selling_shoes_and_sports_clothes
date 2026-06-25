@@ -1,0 +1,199 @@
+<?php include __DIR__ . '/partials/header.php'; ?>
+
+<?php
+$products = include __DIR__ . '/../../config/products_data.php';
+foreach ($products as $i => &$p) { $p['id'] = $i; }
+unset($p);
+
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+if (!isset($products[$id])) {
+    http_response_code(404);
+    echo '<div style="max-width:600px;margin:5rem auto;text-align:center;font-family:sans-serif;"><h1>Không tìm thấy sản phẩm</h1><p><a href="<?= BASE_URL ?>shop">Quay lại cửa hàng</a></p></div>';
+    include __DIR__ . '/partials/footer.php';
+    exit;
+}
+
+$product = $products[$id];
+
+// Related: same category, then same gender, exclude self. Up to 4.
+$related = array_filter($products, fn($p) => $p['id'] !== $id && $p['category'] === $product['category']);
+if (count($related) < 4) {
+    $more = array_filter($products, fn($p) => $p['id'] !== $id && $p['gender'] === $product['gender'] && $p['category'] !== $product['category']);
+    $related = array_merge($related, $more);
+}
+$related = array_slice(array_values($related), 0, 4);
+?>
+
+<style>
+.product-detail-page { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; font-family: var(--font-body); }
+.pd-layout { display: flex; gap: 4rem; }
+.pd-main-img { flex: 1.5; background: #f5f5f5; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pd-main-img img { width: 100%; object-fit: contain; padding: 2rem; }
+.pd-info { flex: 1; display: flex; flex-direction: column; }
+.pd-title { font-size: 1.8rem; font-weight: 500; margin-bottom: 0.2rem; font-family: var(--font-ui); }
+.pd-category { font-size: 1rem; color: #111; margin-bottom: 1rem; }
+.pd-price { font-size: 1.2rem; font-weight: 500; margin-bottom: 2rem; }
+.pd-size-header { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.95rem; font-weight: 500; }
+.pd-size-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 2rem; }
+.pd-size-btn { padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+.pd-size-btn:hover { border-color: #111; }
+.pd-size-btn.active { border-color: #111; box-shadow: inset 0 0 0 1px #111; }
+.pd-actions { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem; }
+.btn-add-bag { padding: 1.2rem; background: #111; color: #fff; border: none; border-radius: 100px; font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+.btn-add-bag:hover { background: #333; }
+.btn-favourite { padding: 1.2rem; background: #fff; color: #111; border: 1px solid #ccc; border-radius: 100px; font-size: 1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: border-color 0.2s; }
+.btn-favourite:hover { border-color: #111; }
+.btn-favourite.active svg { fill: #111; }
+.pd-desc { font-size: 1rem; line-height: 1.6; margin-bottom: 2rem; }
+.pd-details { list-style: disc; padding-left: 1.5rem; font-size: 1rem; line-height: 1.8; }
+.related-section { margin-top: 5rem; }
+.related-section h2 { font-size: 1.5rem; margin-bottom: 2rem; text-transform: none; letter-spacing: normal; font-family: var(--font-ui); }
+.related-grid { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 2rem; scrollbar-width: none; }
+.related-grid::-webkit-scrollbar { display: none; }
+.related-card { flex: 0 0 280px; }
+.related-img { background: #f5f5f5; margin-bottom: 1rem; border-radius: 8px; }
+.related-img img { width: 100%; height: 280px; object-fit: contain; }
+.related-info .r-title { font-weight: 500; margin-bottom: 0.2rem; display: block; }
+.related-info .r-cat { color: #666; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
+.related-info .r-price { font-weight: 500; }
+@media(max-width: 900px) { .pd-layout { flex-direction: column; } }
+</style>
+
+<div class="product-detail-page">
+    <div class="pd-layout">
+        <div class="pd-main-img">
+            <img src="<?= BASE_URL ?>assets/images/<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+        </div>
+
+        <div class="pd-info">
+            <h1 class="pd-title"><?= htmlspecialchars($product['name']) ?></h1>
+            <div class="pd-category"><?= htmlspecialchars($product['type']) ?></div>
+            <div class="pd-price"><?= number_format($product['price'], 0, ',', '.') ?> ₫</div>
+
+            <div class="pd-size-header">
+                <span>Chọn Size</span>
+                <span style="color:#666; cursor:pointer;">Hướng dẫn chọn size</span>
+            </div>
+            <div class="pd-size-grid">
+                <?php foreach (['EU 40','EU 40.5','EU 41','EU 42','EU 42.5','EU 43','EU 44','EU 44.5','EU 45'] as $size): ?>
+                    <button class="pd-size-btn"><?= $size ?></button>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="pd-actions">
+                <button class="btn-add-bag" onclick="addToCart('<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, 'assets/images/<?= htmlspecialchars($product['image']) ?>')">Thêm vào giỏ</button>
+                <button class="btn-favourite" data-name="<?= htmlspecialchars($product['name']) ?>" onclick="toggleFavourite(this, '<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, 'assets/images/<?= htmlspecialchars($product['image']) ?>')">
+                    Yêu thích
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+            </div>
+
+            <div class="pd-desc">
+                <?= htmlspecialchars($product['name']) ?> chính hãng Nike. Sản phẩm thuộc dòng <?= htmlspecialchars($product['category']) ?>, cam kết chất lượng 100% và bảo hành đầy đủ.
+            </div>
+
+            <ul class="pd-details">
+                <li>Danh mục: <?= htmlspecialchars($product['category']) ?></li>
+                <li>Xuất xứ: Vietnam</li>
+                <li>Bảo hành chính hãng</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="related-section">
+        <h2>Sản phẩm bạn có thể thích</h2>
+        <div class="related-grid">
+            <?php foreach ($related as $r): ?>
+            <a href="<?= BASE_URL ?>product?id=<?= $r['id'] ?>" class="related-card">
+                <div class="related-img"><img src="<?= BASE_URL ?>assets/images/<?= htmlspecialchars($r['image']) ?>" alt="<?= htmlspecialchars($r['name']) ?>"></div>
+                <div class="related-info">
+                    <span class="r-title"><?= htmlspecialchars($r['name']) ?></span>
+                    <span class="r-cat"><?= htmlspecialchars($r['type']) ?></span>
+                    <span class="r-price"><?= number_format($r['price'], 0, ',', '.') ?> ₫</span>
+                </div>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Size selection
+document.querySelectorAll('.pd-size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.pd-size-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// ===== CART (localStorage) =====
+let cart = JSON.parse(localStorage.getItem('paceup_cart')) || [];
+
+function saveCart() {
+    localStorage.setItem('paceup_cart', JSON.stringify(cart));
+    updateBadge();
+}
+
+function addToCart(name, price, image) {
+    const existing = cart.find(item => item.name === name);
+    if (existing) existing.qty += 1;
+    else cart.push({ name, price, image, qty: 1 });
+    saveCart();
+    showToast('Đã thêm vào giỏ hàng!');
+}
+
+function updateBadge() {
+    const total = cart.reduce((s, i) => s + i.qty, 0);
+    document.querySelectorAll('.cart-badge').forEach(b => {
+        b.textContent = total;
+        b.style.display = total > 0 ? 'flex' : 'none';
+    });
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== FAVOURITE =====
+let favourites = JSON.parse(localStorage.getItem('paceup_favs')) || [];
+
+function toggleFavourite(btn, name, price, image) {
+    const index = favourites.findIndex(f => f.name === name);
+    if (index > -1) {
+        favourites.splice(index, 1);
+        btn.classList.remove('active');
+        showToast('Đã xóa khỏi danh sách yêu thích');
+    } else {
+        favourites.push({ name, price, image });
+        btn.classList.add('active');
+        showToast('Đã thêm vào danh sách yêu thích');
+    }
+    localStorage.setItem('paceup_favs', JSON.stringify(favourites));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Mark favourite state
+    const favBtn = document.querySelector('.btn-favourite');
+    if (favBtn && favourites.find(f => f.name === favBtn.dataset.name)) {
+        favBtn.classList.add('active');
+    }
+    // Cart badge + open on cart icon
+    const cartIcon = document.querySelector('a[href="<?= BASE_URL ?>cart"]');
+    if (cartIcon && !cartIcon.querySelector('.cart-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'cart-badge';
+        badge.style.display = 'none';
+        badge.textContent = '0';
+        cartIcon.appendChild(badge);
+    }
+    updateBadge();
+});
+</script>
+
+<?php include __DIR__ . '/partials/footer.php'; ?>
