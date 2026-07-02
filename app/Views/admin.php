@@ -199,11 +199,12 @@ include __DIR__ . '/partials/header.php';
     <aside class="admin-sidebar">
         <ul>
             <li><a href="?page=dashboard" class="<?= $page === 'dashboard' ? 'active' : '' ?>">Dashboard</a></li>
-            <li><a href="?page=products" class="<?= $page === 'products' ? 'active' : '' ?>">Sản phẩm</a></li>
-            <li><a href="?page=categories" class="<?= $page === 'categories' ? 'active' : '' ?>">Danh mục</a></li>
+            <li><a href="<?= BASE_URL ?>admin/products">Sản phẩm</a></li>
+            <li><a href="<?= BASE_URL ?>admin/categories">Danh mục</a></li>
             <li><a href="?page=orders" class="<?= $page === 'orders' ? 'active' : '' ?>">Đơn hàng</a></li>
-            <li><a href="?page=inventory" class="<?= $page === 'inventory' ? 'active' : '' ?>">Kho hàng</a></li>
+            <li><a href="<?= BASE_URL ?>admin/inventory">Kho hàng</a></li>
             <li><a href="?page=coupons" class="<?= $page === 'coupons' ? 'active' : '' ?>">Mã giảm giá</a></li>
+            <li><a href="<?= BASE_URL ?>admin/reviews">Đánh giá</a></li>
             <li><a href="?page=users" class="<?= $page === 'users' ? 'active' : '' ?>">Người dùng</a></li>
             <li><a href="?page=settings" class="<?= $page === 'settings' ? 'active' : '' ?>">Cài đặt</a></li>
         </ul>

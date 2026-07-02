@@ -1,5 +1,13 @@
 <?php include __DIR__ . '/partials/header.php'; ?>
 
+<?php
+function productDetailAssetPath($image): string {
+    $image = (string)$image;
+    if ($image === '') return '';
+    return str_starts_with($image, 'uploads/') ? $image : 'assets/images/' . $image;
+}
+?>
+
 // Controller provides $product and $related
 
 <style>
@@ -40,7 +48,7 @@
 <div class="product-detail-page">
     <div class="pd-layout">
         <div class="pd-main-img">
-            <img src="<?= BASE_URL ?>assets/images/<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+            <img src="<?= BASE_URL . htmlspecialchars(productDetailAssetPath($product['image'])) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
         </div>
 
         <div class="pd-info">
@@ -59,8 +67,8 @@
             </div>
 
             <div class="pd-actions">
-                <button class="btn-add-bag" onclick="addToCart('<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, 'assets/images/<?= htmlspecialchars($product['image']) ?>')">Thêm vào giỏ</button>
-                <button class="btn-favourite" data-name="<?= htmlspecialchars($product['name']) ?>" onclick="toggleFavourite(this, '<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, 'assets/images/<?= htmlspecialchars($product['image']) ?>')">
+                <button class="btn-add-bag" onclick="addToCart('<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, '<?= htmlspecialchars(productDetailAssetPath($product['image'])) ?>')">Thêm vào giỏ</button>
+                <button class="btn-favourite" data-name="<?= htmlspecialchars($product['name']) ?>" onclick="toggleFavourite(this, '<?= htmlspecialchars(addslashes($product['name'])) ?>', <?= $product['price'] ?>, '<?= htmlspecialchars(productDetailAssetPath($product['image'])) ?>')">
                     Yêu thích
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 </button>
@@ -83,7 +91,7 @@
         <div class="related-grid">
             <?php foreach ($related as $r): ?>
             <a href="<?= BASE_URL ?>product?id=<?= $r['id'] ?>" class="related-card">
-                <div class="related-img"><img src="<?= BASE_URL ?>assets/images/<?= htmlspecialchars($r['image']) ?>" alt="<?= htmlspecialchars($r['name']) ?>"></div>
+                <div class="related-img"><img src="<?= BASE_URL . htmlspecialchars(productDetailAssetPath($r['image'])) ?>" alt="<?= htmlspecialchars($r['name']) ?>"></div>
                 <div class="related-info">
                     <span class="r-title"><?= htmlspecialchars($r['name']) ?></span>
                     <span class="r-cat"><?= htmlspecialchars($r['type']) ?></span>
